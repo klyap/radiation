@@ -136,7 +136,19 @@ double * fillKernels(double *kernel_data){
     
 }
 */
-double * fillTransform(){return NULL;}
+
+/*
+Makes an array of 
+*/
+double * fillTransform(){
+    int phi, theta;
+    for (phi = 0; phi < 360; phi = phi + 10){
+        for (theta = 0; theta < 360; theta = theta + 60) {
+            // Make the transform array
+            
+        }
+    }  
+    return NULL;}
 
 int calculate(int argc, char **argv) {
     //check_args(argc, argv);
