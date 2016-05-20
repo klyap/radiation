@@ -9,7 +9,7 @@
 
 #include <algorithm>
 #include <cassert>
-#include <cuda_runtime.h>
+/*#include <cuda_runtime.h> */
 
 #include <glm/glm.hpp>
 #include <glm/vec3.hpp> // glm::vec3
@@ -60,6 +60,7 @@ void check_args(int argc, char **argv) {
 /* m x n are dims of a, p x q are dims of matrix b */
 double * matrix_multiply(double *a, double *b, int m, int n, int p, int q){
     double *c;
+    int i, j, k;
     for(i=0;i<m;++i)
         {
             for(j=0;j<q;++j)
@@ -74,6 +75,7 @@ double * matrix_multiply(double *a, double *b, int m, int n, int p, int q){
 }
 
 void stuff(){
+    /*
     // For each output pixel:
     for (int x = 0; x < 100; x++){
         for (int y = 0; y < 100; y++){
@@ -89,12 +91,13 @@ void stuff(){
         }
 
     }
+    */
 }
 
 // Map kernels to beam based on depth
 // Each beam_depths[i] is a kernel index, which goes up to 50
 // For now, it's just some arbitrary kernel
-int * fillBeamDepths(int *beam_depths){
+int * fillBeamDepths(int *beam_depths, int MAX_BEAM_IDX){
     for (int i = 0; i < MAX_BEAM_IDX; i++){
         beam_depths[i] = i % 50;
     }
@@ -102,6 +105,7 @@ int * fillBeamDepths(int *beam_depths){
 
 double * fillKernels(double *kernel_data){
     // for each kernel
+    /*
     for (int l = 0; i < 50; l++){
         // Calculate I for all pixels
         int L = -125 + l * 5;
@@ -115,6 +119,7 @@ double * fillKernels(double *kernel_data){
             }
         }
     }
+    */
     
 }
 
@@ -128,8 +133,6 @@ int calculate(int argc, char **argv) {
     float std = 5.0;
 
     int MAX_BEAM_IDX = 36 * 6;
-
-
 
     double *output = (double *) malloc(100 * 100 * 100 * sizeof (double));
 
@@ -150,13 +153,16 @@ int calculate(int argc, char **argv) {
     //memset(output_data_host, 0, n_frames * sizeof (float));
 
     // Use the CUDA machinery for recording time
+    
+    /*
     cudaEvent_t start_cpu, stop_cpu;
     cudaEventCreate(&start_cpu);
     cudaEventCreate(&stop_cpu);
     cudaEventRecord(start_cpu);
+    */
 
     // Populate kernels
-    beam_depths = fillBeamDepths(beam_depths);
+    beam_depths = fillBeamDepths(beam_depths, MAX_BEAM_IDX);
     kernel_data = fillKernels(kernel_data);
     stuff();
     // Process
@@ -164,14 +170,16 @@ int calculate(int argc, char **argv) {
 
 
     // Stop timer
+    /*
     cudaEventRecord(stop_cpu);
     cudaEventSynchronize(stop_cpu);
-
+    */
 
     // Stop timer
     //cudaEventRecord(stop_gpu);
     //cudaEventSynchronize(stop_gpu);
-
+    
+    /*
     cout << "Comparing..." << endl;
 
     float cpu_time_milliseconds = -1;
@@ -180,10 +188,8 @@ int calculate(int argc, char **argv) {
 
     cout << endl;
     cout << "CPU time: " << cpu_time_milliseconds << " milliseconds" << endl;
+    */
     
-   
-
-    }
 
     // Free memory on host
     /*free(input_data);
@@ -196,6 +202,7 @@ int calculate(int argc, char **argv) {
 
 
 int main(int argc, char **argv) {
+
     return calculate(argc, argv);
 }
 
