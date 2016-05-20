@@ -19,10 +19,11 @@
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 #include <glm/gtx/transform.hpp>
 
+/*
 using std::cerr;
 using std::cout;
 using std::endl;
-
+*/
 const float PI = 3.14159265358979;
 
 
@@ -48,6 +49,7 @@ inline void gpuAssert(cudaError_t code, const char *file, int line,
 */
 
 /* Checks the passed-in arguments for validity. */
+/*
 void check_args(int argc, char **argv) {
 
     if (argc != 3) {
@@ -56,10 +58,13 @@ void check_args(int argc, char **argv) {
         exit(EXIT_FAILURE);
     }
 }
+*/
 
 /* m x n are dims of a, p x q are dims of matrix b */
+/*
 double * matrix_multiply(double *a, double *b, int m, int n, int p, int q){
-    double *c;
+    
+    double *c[m][q];
     int i, j, k;
     for(i=0;i<m;++i)
         {
@@ -72,10 +77,14 @@ double * matrix_multiply(double *a, double *b, int m, int n, int p, int q){
         }
             cout<<"\n";
         }
+        
+    return NULL;
 }
+*/
 
+/*
 void stuff(){
-    /*
+
     // For each output pixel:
     for (int x = 0; x < 100; x++){
         for (int y = 0; y < 100; y++){
@@ -91,8 +100,9 @@ void stuff(){
         }
 
     }
-    */
+    
 }
+*/
 
 // Map kernels to beam based on depth
 // Each beam_depths[i] is a kernel index, which goes up to 50
@@ -101,11 +111,13 @@ int * fillBeamDepths(int *beam_depths, int MAX_BEAM_IDX){
     for (int i = 0; i < MAX_BEAM_IDX; i++){
         beam_depths[i] = i % 50;
     }
+    return beam_depths;
 }
 
+/*
 double * fillKernels(double *kernel_data){
     // for each kernel
-    /*
+    
     for (int l = 0; i < 50; l++){
         // Calculate I for all pixels
         int L = -125 + l * 5;
@@ -119,18 +131,19 @@ double * fillKernels(double *kernel_data){
             }
         }
     }
-    */
+    
+    return NULL;
     
 }
-
-double * fillTransform(){}
+*/
+double * fillTransform(){return NULL;}
 
 int calculate(int argc, char **argv) {
     //check_args(argc, argv);
 
     /* Form Gaussian blur vector */
-    float mean = 0.0;
-    float std = 5.0;
+    //float mean = 0.0;
+    //float std = 5.0;
 
     int MAX_BEAM_IDX = 36 * 6;
 
@@ -139,8 +152,9 @@ int calculate(int argc, char **argv) {
     // Rotation matrices for 60 psi and 6 theta angles
     // One per the 36 * 6 beams
     // Each matrix is 4 x 4
-    double *transform = (double *) malloc((36 * 6) * (4 * 4) * sizeof (double));
-
+    //double *transform = (double *) malloc((36 * 6) * (4 * 4) * sizeof (double));
+    glm::mat4 *transform = (glm::mat4 *) malloc((36 * 6) * sizeof (glm::mat4 *));
+    
     // Output data storage for GPU implementation (will write to this from GPU)
     int *beam_depths = (int *) malloc(MAX_BEAM_IDX * sizeof (int));
 
@@ -148,7 +162,7 @@ int calculate(int argc, char **argv) {
     double *kernel_data = (double *) malloc(50 * (250 * 100 * 100) * sizeof (double));
     
     // CPU Computation
-    cout << "CPU computation..." << endl;
+    //cout << "CPU computation..." << endl;
 
     //memset(output_data_host, 0, n_frames * sizeof (float));
 
@@ -163,8 +177,8 @@ int calculate(int argc, char **argv) {
 
     // Populate kernels
     beam_depths = fillBeamDepths(beam_depths, MAX_BEAM_IDX);
-    kernel_data = fillKernels(kernel_data);
-    stuff();
+    //kernel_data = fillKernels(kernel_data);
+    //stuff();
     // Process
 
 
@@ -192,9 +206,9 @@ int calculate(int argc, char **argv) {
     
 
     // Free memory on host
-    /*free(input_data);
-    free(output_data);
-    free(output_data_host);*/
+    free(transform);
+    free(output);
+    free(kernel_data);
 
 
     return EXIT_SUCCESS;
